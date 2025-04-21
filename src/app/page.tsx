@@ -5,7 +5,7 @@ export default function AimTrainerApp() {
   const [mode, setMode] = useState("click");
   const [started, setStarted] = useState(false);
   const [score, setScore] = useState(0);
-  const [clicks, setClicks] = useState(0); // Total clicks
+  const [misses, setMisses] = useState(0);
   const [startTime, setStartTime] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
@@ -25,31 +25,23 @@ export default function AimTrainerApp() {
       const stored = localStorage.getItem("aimTrainerHistory");
       if (stored) setHistory(JSON.parse(stored));
     }
-
-    const handleClick = (e: MouseEvent) => {
-      if (!started) return;
-      setClicks(prev => prev + 1);
-    };
-
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
-  }, [started]);
+  }, []);
 
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
-    const accuracy = clicks > 0 ? ((score / clicks) * 100).toFixed(1) + "%" : "0%";
+    const totalAttempts = score + misses;
+    const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
     const newEntry = {
       mode,
       score,
-      clicks,
+      misses,
       accuracy,
       duration,
       timestamp: new Date().toISOString(),
       username: "",
       hits: score,
-      attempts: clicks,
+      attempts: totalAttempts
     };
-
     const updatedHistory = [newEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
     const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
     if (isHighScore) {
@@ -101,7 +93,7 @@ export default function AimTrainerApp() {
             onClick={() => {
               setStarted(true);
               setScore(0);
-              setClicks(0);
+              setMisses(0);
               setStartTime(Date.now());
               setTimeout(() => {
                 setTargets([generateTarget()]);
@@ -141,7 +133,10 @@ export default function AimTrainerApp() {
       {/* Main Play Area */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">
         {started ? (
-          <div className="relative w-full max-w-[560px] h-[400px] bg-black overflow-hidden">
+          <div
+            className="relative w-full max-w-[560px] h-[400px] bg-black overflow-hidden"
+            onClick={() => setMisses(prev => prev + 1)}
+          >
             <canvas
               ref={canvasRef}
               width={560}
@@ -170,8 +165,8 @@ export default function AimTrainerApp() {
           <>
             <div className="text-center mb-4">
               <p>Last Score: {score}</p>
-              <p>Last Clicks: {clicks}</p>
-              <p>Last Accuracy: {clicks > 0 ? ((score / clicks) * 100).toFixed(1) + "%" : "0%"}</p>
+              <p>Misses: {misses}</p>
+              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
@@ -179,7 +174,7 @@ export default function AimTrainerApp() {
                 <h3 className="text-white font-semibold mb-1">High Scores</h3>
                 {history.map((entry, idx) => (
                   <div key={idx} className="mb-1">
-                    {entry.username ? `[${entry.username}] ` : ""}Score: {entry.score}, Clicks: {entry.clicks}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                    {entry.username ? `[${entry.username}] ` : ""}Score: {entry.score}, Misses: {entry.misses}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
                   </div>
                 ))}
               </div>
