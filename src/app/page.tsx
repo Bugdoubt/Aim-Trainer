@@ -87,6 +87,19 @@ export default function AimTrainerApp() {
           ))}
         </nav>
 
+        {history.length > 0 && (
+          <div className="mt-6 w-full text-sm text-gray-300">
+            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
+            <div className="max-h-40 overflow-y-auto text-xs">
+              {history.slice(0, 10).map((entry, idx) => (
+                <div key={idx} className="mb-1 text-center">
+                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {!started && !pendingHighScore && (
           <button
             className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
