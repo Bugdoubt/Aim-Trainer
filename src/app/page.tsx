@@ -46,12 +46,8 @@ export default function AimTrainerApp() {
     return () => clearTimeout(timer);
   }, [started]);
 
-  const getButtonClass = (current: string) => {
+    const getButtonClass = (current: string) => {
     return mode === current
-      ? "px-4 py-2 rounded border bg-white text-black"
-      : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
-  };
-
       ? "px-4 py-2 rounded border bg-white text-black"
       : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
   };
@@ -63,7 +59,7 @@ export default function AimTrainerApp() {
         <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
       </header>
 
-      <nav className="flex flex-col gap-2 items-center"
+      <nav className="flex flex-col gap-2 items-center">
         {['click', 'tracking', 'flick', 'precision'].map((m) => (
           <button
             key={m}
@@ -78,7 +74,7 @@ export default function AimTrainerApp() {
       <main className="flex-grow flex flex-row relative overflow-hidden min-h-0">
         {!started ? (
           <button
-            className="bg-blue-500 px-4 py-2 rounded w-[200px] mt-4"
+            className="bg-blue-500 px-4 py-2 rounded"
             onClick={() => {
               setStarted(true);
               setScore(0);
