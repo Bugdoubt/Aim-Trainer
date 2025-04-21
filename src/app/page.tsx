@@ -10,11 +10,15 @@ export default function AimTrainerApp() {
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const canvasRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const generateTarget = () => {
     const size = 50;
-    const x = Math.random() * (window.innerWidth - size - 40);
-    const y = Math.random() * (window.innerHeight - size - 200);
+    const bounds = containerRef.current?.getBoundingClientRect();
+    const w = bounds?.width || 800;
+    const h = bounds?.height || 600;
+    const x = Math.random() * (w - size);
+    const y = Math.random() * (h - size);
     return { x, y, size, id: Date.now() };
   };
 
@@ -81,18 +85,21 @@ export default function AimTrainerApp() {
                 setScore(0);
                 setShots(0);
                 setStartTime(Date.now());
-                setTargets([generateTarget()]);
+                setTimeout(() => setTargets([generateTarget()]), 50);
               }}
             >
               Start Training
             </button>
           </div>
         ) : (
-          <div className="relative w-full h-full bg-black overflow-hidden">
+          <div
+            className="relative w-full h-full bg-black overflow-hidden"
+            ref={containerRef}
+          >
             <canvas
               ref={canvasRef}
-              width={window.innerWidth}
-              height={window.innerHeight}
+              width={containerRef.current?.clientWidth || 800}
+              height={containerRef.current?.clientHeight || 600}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
