@@ -8,7 +8,7 @@ export default function AimTrainerApp() {
   const [shots, setShots] = useState(0);
   const [startTime, setStartTime] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
-  const [history, setHistory] = useState(() => JSON.parse(localStorage.getItem('aimTrainerHistory') || '[]'));
+  const [history, setHistory] = useState<any[]>([]);
   const canvasRef = useRef<any>(null);
 
   const generateTarget = () => {
@@ -37,6 +37,13 @@ export default function AimTrainerApp() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("aimTrainerHistory");
+      if (stored) setHistory(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
     if (started && mode === "click") {
       setScore(0);
       setShots(0);
@@ -51,7 +58,9 @@ export default function AimTrainerApp() {
     const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString() };
     const updatedHistory = [newEntry, ...history].slice(0, 10);
     setHistory(updatedHistory);
-    localStorage.setItem('aimTrainerHistory', JSON.stringify(updatedHistory));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
+    }
     setStarted(false);
   };
 
@@ -74,7 +83,7 @@ export default function AimTrainerApp() {
         {['click', 'tracking', 'flick', 'precision'].map((m) => (
           <button
             key={m}
-            className={`px-4 py-2 rounded border ${mode === m ? 'bg-white text-black' : 'bg-gray-800 border-gray-700'}`}
+            className={\`px-4 py-2 rounded border \${mode === m ? 'bg-white text-black' : 'bg-gray-800 border-gray-700'}\`}
             onClick={() => setMode(m)}>
             {m.charAt(0).toUpperCase() + m.slice(1)}
           </button>
