@@ -28,9 +28,11 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
-    const duration = (Date.now() - startTime) / 1000;
-    const totalAttempts = score + misses;
-    const accuracy = totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) + "%" : "0%";
+    const finalScore = score;
+    const finalMisses = misses;
+        const duration = (Date.now() - startTime) / 1000;
+        const totalAttempts = finalScore + finalMisses;
+        const accuracy = totalAttempts > 0 ? Math.round((finalScore / totalAttempts) * 100) + "%" : "0%";
     const newEntry = {
       mode,
       score,
