@@ -13,8 +13,8 @@ export default function AimTrainerApp() {
 
   const generateTarget = () => {
     const size = 50;
-    const x = Math.random() * (700 - size);
-    const y = Math.random() * (500 - size);
+    const x = Math.random() * (560 - size);
+    const y = Math.random() * (400 - size);
     return { x, y, size, id: Date.now() };
   };
 
@@ -130,7 +130,7 @@ export default function AimTrainerApp() {
             <div className="mt-2">
               <p>Score: {score}</p>
               <p>Shots: {shots}</p>
-              <p>Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) : 0}%</p>
+              <p>Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
           )}
           {!started && history.length > 0 && (
