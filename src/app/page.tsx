@@ -50,7 +50,6 @@ export default function AimTrainerApp() {
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
     const total = score + misses;
-const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
 const newEntry = {
   score,
   misses,
