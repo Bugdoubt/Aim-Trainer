@@ -72,6 +72,12 @@ export default function AimTrainerApp() {
     return () => clearTimeout(timer);
   }, [started]);
 
+  const getButtonClass = (current: string) => {
+    return mode === current
+      ? "px-4 py-2 rounded border bg-white text-black"
+      : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
+  };
+
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4">
       <header className="text-center mb-6">
@@ -83,8 +89,9 @@ export default function AimTrainerApp() {
         {['click', 'tracking', 'flick', 'precision'].map((m) => (
           <button
             key={m}
-            className={\`px-4 py-2 rounded border \${mode === m ? 'bg-white text-black' : 'bg-gray-800 border-gray-700'}\`}
-            onClick={() => setMode(m)}>
+            className={getButtonClass(m)}
+            onClick={() => setMode(m)}
+          >
             {m.charAt(0).toUpperCase() + m.slice(1)}
           </button>
         ))}
