@@ -160,7 +160,7 @@ export default function AimTrainerApp() {
                 <h3 className="text-white font-semibold mb-1">High Scores</h3>
                 {history.map((entry, idx) => (
                   <div key={idx} className="mb-1">
-                    {entry.username ? `[${entry.username}] ` : ''}Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                    {entry.username ? `[${entry.username}] ` : ""}Score: {entry.score}, Hits: {entry.score}, Attempts: {entry.shots}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
                   </div>
                 ))}
               </div>
