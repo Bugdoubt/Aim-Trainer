@@ -28,6 +28,9 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
+    const duration = (Date.now() - startTime) / 1000;
+    const totalAttempts = score + misses;
+    const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
     const newEntry = {
       mode,
       score,
@@ -39,30 +42,15 @@ export default function AimTrainerApp() {
       hits: score,
       attempts: totalAttempts
     };
-        const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
+    const updatedHistory = [newEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
+    const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
     if (isHighScore) {
       setPendingHighScore(newEntry);
     } else {
       setHistory(updatedHistory);
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
-    const duration = (Date.now() - startTime) / 1000;
-const total = score + misses;
-const duration = (Date.now() - startTime) / 1000;
-const total = score + misses;
-const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
-const gameEntry = {
-  score: score,
-  misses: misses,
-  accuracy: accuracy,
-  duration: duration,
-  timestamp: new Date().toISOString(),
-};
-const updated = [gameEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
-setHistory(updated);
-localStorage.setItem("aimTrainerHistory", JSON.stringify(updated));
-
-setStarted(false);
+    setStarted(false);
     setTargets([]);
   };
 
@@ -98,19 +86,6 @@ setStarted(false);
             </button>
           ))}
         </nav>
-
-        {history.length > 0 && (
-          <div className="mt-6 w-full text-sm text-gray-300">
-            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
-            <div className="max-h-40 overflow-y-auto text-xs">
-              {history.slice(0, 10).map((entry, idx) => (
-                <div key={idx} className="mb-1 text-center">
-                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {!started && !pendingHighScore && (
           <button
@@ -191,7 +166,7 @@ setStarted(false);
             <div className="text-center mb-4">
               <p>Last Score: {score}</p>
               <p>Misses: {misses}</p>
-              <p>Accuracy: {(score + misses) > 0 ? Math.round((score / (score + misses)) * 100) + "%" : "0%"}</p>
+              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
