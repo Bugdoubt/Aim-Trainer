@@ -28,7 +28,6 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
-            const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
     const newEntry = {
       mode,
       score,
