@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function AimTrainerApp() {
-  const mode = "click";
+  const [mode, setMode] = useState("click");
   const [started, setStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -50,21 +50,7 @@ export default function AimTrainerApp() {
       setHistory(updatedHistory);
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
-    const duration = (Date.now() - startTime) / 1000;
-const total = score + misses;
-const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
-const newEntry = {
-  score,
-  misses,
-  accuracy,
-  duration,
-  timestamp: new Date().toISOString(),
-};
-const updated = [newEntry, ...history].slice(0, 10);
-setHistory(updated);
-localStorage.setItem("aimTrainerHistory", JSON.stringify(updated));
-
-setStarted(false);
+    setStarted(false);
     setTargets([]);
   };
 
@@ -98,19 +84,6 @@ setStarted(false);
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
-
-        {history.length > 0 && (
-          <div className="mt-6 w-full text-sm text-gray-300">
-            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
-            <div className="max-h-40 overflow-y-auto text-xs">
-              {history.map((entry, idx) => (
-                <div key={idx} className="mb-1 text-center">
-                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
           ))}
         </nav>
 
@@ -129,19 +102,6 @@ setStarted(false);
           >
             Start Training
           </button>
-
-        {history.length > 0 && (
-          <div className="mt-6 w-full text-sm text-gray-300">
-            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
-            <div className="max-h-40 overflow-y-auto text-xs">
-              {history.map((entry, idx) => (
-                <div key={idx} className="mb-1 text-center">
-                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
         )}
 
         {pendingHighScore && (
@@ -166,7 +126,8 @@ setStarted(false);
               placeholder="Your name"
             />
             <button type="submit" className="bg-blue-500 px-3 py-1 rounded">Submit</button>
-
+          </form>
+        )}
         {history.length > 0 && (
           <div className="mt-6 w-full text-sm text-gray-300">
             <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
@@ -178,8 +139,6 @@ setStarted(false);
               ))}
             </div>
           </div>
-        )}
-          </form>
         )}
       </div>
 
