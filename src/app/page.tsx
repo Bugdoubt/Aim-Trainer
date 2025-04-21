@@ -10,16 +10,11 @@ export default function AimTrainerApp() {
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const canvasRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const generateTarget = () => {
     const size = 50;
-    const bounds = containerRef.current?.getBoundingClientRect();
-    const width = bounds?.width || 800;
-    const height = bounds?.height || 600;
-    const x = Math.random() * (width - size);
-    const y = Math.random() * (height - size);
-    console.log("Generated target:", { x, y, size });
+    const x = Math.random() * (800 - size);
+    const y = Math.random() * (600 - size);
     return { x, y, size, id: Date.now() };
   };
 
@@ -51,19 +46,6 @@ export default function AimTrainerApp() {
     return () => clearTimeout(timer);
   }, [started]);
 
-  const startTraining = () => {
-    console.log("Game started");
-    setStarted(true);
-    setScore(0);
-    setShots(0);
-    setStartTime(Date.now());
-
-    setTimeout(() => {
-      const target = generateTarget();
-      setTargets([target]);
-    }, 100);
-  };
-
   const getButtonClass = (current: string) => {
     return mode === current
       ? "px-4 py-2 rounded border bg-white text-black"
@@ -89,25 +71,28 @@ export default function AimTrainerApp() {
         ))}
       </nav>
 
-      <main className="flex-grow relative overflow-hidden min-h-0">
+      <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden min-h-0">
         {!started ? (
-          <div className="flex items-center justify-center h-full">
-            <button
-              className="bg-blue-500 px-4 py-2 rounded"
-              onClick={startTraining}
-            >
-              Start Training
-            </button>
-          </div>
-        ) : (
-          <div
-            className="relative w-full h-full bg-black overflow-hidden"
-            ref={containerRef}
+          <button
+            className="bg-blue-500 px-4 py-2 rounded"
+            onClick={() => {
+              setStarted(true);
+              setScore(0);
+              setShots(0);
+              setStartTime(Date.now());
+              setTimeout(() => {
+                setTargets([generateTarget()]);
+              }, 100);
+            }}
           >
+            Start Training
+          </button>
+        ) : (
+          <div className="relative w-[800px] h-[600px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
-              width={containerRef.current?.clientWidth || 800}
-              height={containerRef.current?.clientHeight || 600}
+              width={800}
+              height={600}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
