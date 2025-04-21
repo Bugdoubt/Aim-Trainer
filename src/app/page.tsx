@@ -76,7 +76,11 @@ setStarted(false);
     return () => clearTimeout(timer);
   }, [started]);
 
-  
+  const getButtonClass = (current: string) => {
+    return mode === current
+      ? "px-4 py-2 rounded border bg-white text-black"
+      : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
+  };
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-row overflow-hidden">
@@ -94,6 +98,7 @@ setStarted(false);
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
+
         {history.length > 0 && (
           <div className="mt-6 w-full text-sm text-gray-300">
             <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
@@ -106,25 +111,12 @@ setStarted(false);
             </div>
           </div>
         )}
-    
           ))}
         </nav>
 
         {!started && !pendingHighScore && (
           <button
             className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
-        {history.length > 0 && (
-          <div className="mt-6 w-full text-sm text-gray-300">
-            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
-            <div className="max-h-40 overflow-y-auto text-xs">
-              {history.map((entry, idx) => (
-                <div key={idx} className="mb-1 text-center">
-                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
             onClick={() => {
               setStarted(true);
               setScore(0);
@@ -137,6 +129,19 @@ setStarted(false);
           >
             Start Training
           </button>
+
+        {history.length > 0 && (
+          <div className="mt-6 w-full text-sm text-gray-300">
+            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
+            <div className="max-h-40 overflow-y-auto text-xs">
+              {history.map((entry, idx) => (
+                <div key={idx} className="mb-1 text-center">
+                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         )}
 
         {pendingHighScore && (
@@ -161,6 +166,19 @@ setStarted(false);
               placeholder="Your name"
             />
             <button type="submit" className="bg-blue-500 px-3 py-1 rounded">Submit</button>
+
+        {history.length > 0 && (
+          <div className="mt-6 w-full text-sm text-gray-300">
+            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
+            <div className="max-h-40 overflow-y-auto text-xs">
+              {history.map((entry, idx) => (
+                <div key={idx} className="mb-1 text-center">
+                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
           </form>
         )}
       </div>
