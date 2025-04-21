@@ -9,16 +9,15 @@ export default function AimTrainerApp() {
   const [startTime, setStartTime] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const generateTarget = () => {
     const size = 50;
-    const bounds = containerRef.current?.getBoundingClientRect();
-    const w = bounds?.width || 800;
-    const h = bounds?.height || 600;
-    const x = Math.random() * (w - size);
-    const y = Math.random() * (h - size);
+    const { width, height } = containerSize;
+    const x = Math.random() * (width - size);
+    const y = Math.random() * (height - size);
     return { x, y, size, id: Date.now() };
   };
 
@@ -27,6 +26,23 @@ export default function AimTrainerApp() {
       const stored = localStorage.getItem("aimTrainerHistory");
       if (stored) setHistory(JSON.parse(stored));
     }
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry && entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+        setContainerSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+      }
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const endGame = () => {
@@ -85,7 +101,7 @@ export default function AimTrainerApp() {
                 setScore(0);
                 setShots(0);
                 setStartTime(Date.now());
-                setTimeout(() => setTargets([generateTarget()]), 50);
+                setTargets([generateTarget()]);
               }}
             >
               Start Training
@@ -98,8 +114,8 @@ export default function AimTrainerApp() {
           >
             <canvas
               ref={canvasRef}
-              width={containerRef.current?.clientWidth || 800}
-              height={containerRef.current?.clientHeight || 600}
+              width={containerSize.width}
+              height={containerSize.height}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
