@@ -59,7 +59,7 @@ export default function AimTrainerApp() {
         <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
       </header>
 
-      <nav className="flex flex-col gap-2 p-4 w-[250px] flex-shrink-0">
+      <nav className="flex flex-col gap-2 p-4 w-[250px] flex-shrink-0 items-center text-center">
         {['click', 'tracking', 'flick', 'precision'].map((m) => (
           <button
             key={m}
@@ -88,7 +88,7 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         ) : (
-          <div className="relative flex-grow h-[500px] bg-black overflow-hidden">
+          <div className="relative flex-grow h-[250px] max-w-[350px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
               width={800}
