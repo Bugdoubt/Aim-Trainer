@@ -1,6 +1,8 @@
+import '../styles/globals.css'; // ✅ Tailwind styles
+
 export const metadata = {
   title: "Aim Trainer",
-  description: "Train your aim in multiple modes",
+  description: "Train your aim across multiple modes",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
