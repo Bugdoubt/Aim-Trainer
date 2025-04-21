@@ -88,7 +88,7 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         ) : (
-          <div className="relative w-[800px] h-[600px] bg-black overflow-hidden">
+          <div className="relative w-[700px] h-[500px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
               width={800}
