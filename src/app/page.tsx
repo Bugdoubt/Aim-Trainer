@@ -30,7 +30,7 @@ export default function AimTrainerApp() {
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
     const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%";
-    const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString(), username: "" };
+    const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString(), username: "", hits: score, attempts: shots };
     const updatedHistory = [newEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
     const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
     if (isHighScore) {
@@ -160,7 +160,7 @@ export default function AimTrainerApp() {
                 <h3 className="text-white font-semibold mb-1">High Scores</h3>
                 {history.map((entry, idx) => (
                   <div key={idx} className="mb-1">
-                    {entry.username ? `[${entry.username}] ` : ""}Score: {entry.score}, Hits: {entry.score}, Attempts: {entry.shots}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                    {entry.username ? `[${entry.username}] ` : ""}Score: {entry.score}, Hits: {entry.hits}, Attempts: {entry.attempts}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
                   </div>
                 ))}
               </div>
