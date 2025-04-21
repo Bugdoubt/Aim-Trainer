@@ -28,8 +28,7 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
-    const duration = (Date.now() - startTime) / 1000;
-    const totalAttempts = score + misses;
+        const totalAttempts = score + misses;
     const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
     const newEntry = {
       mode,
@@ -50,8 +49,7 @@ export default function AimTrainerApp() {
       setHistory(updatedHistory);
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
-    const duration = (Date.now() - startTime) / 1000;
-const total = score + misses;
+    const total = score + misses;
 const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
 const newEntry = {
   score,
