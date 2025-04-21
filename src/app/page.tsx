@@ -19,6 +19,8 @@ export default function AimTrainerApp() {
   };
 
   const handleCanvasClick = (e: any) => {
+    if (targets.length === 0) return;
+
     const rect = canvasRef.current.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
