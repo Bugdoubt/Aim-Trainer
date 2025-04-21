@@ -9,16 +9,17 @@ export default function AimTrainerApp() {
   const [startTime, setStartTime] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const generateTarget = () => {
     const size = 50;
-    const { width, height } = containerSize;
+    const bounds = containerRef.current?.getBoundingClientRect();
+    const width = bounds?.width || 800;
+    const height = bounds?.height || 600;
     const x = Math.random() * (width - size);
     const y = Math.random() * (height - size);
-    console.log("Generated target at", { x, y, size });
+    console.log("Generated target:", { x, y, size });
     return { x, y, size, id: Date.now() };
   };
 
@@ -28,36 +29,6 @@ export default function AimTrainerApp() {
       if (stored) setHistory(JSON.parse(stored));
     }
   }, []);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (entry && entry.contentRect.width > 0 && entry.contentRect.height > 0) {
-        console.log("Container resized:", entry.contentRect);
-        setContainerSize({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        });
-      }
-    });
-
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (
-      started &&
-      containerSize.width > 0 &&
-      containerSize.height > 0 &&
-      targets.length === 0
-    ) {
-      console.log("Generating first target");
-      setTargets([generateTarget()]);
-    }
-  }, [started, containerSize, targets]);
 
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
@@ -79,6 +50,19 @@ export default function AimTrainerApp() {
     }
     return () => clearTimeout(timer);
   }, [started]);
+
+  const startTraining = () => {
+    console.log("Game started");
+    setStarted(true);
+    setScore(0);
+    setShots(0);
+    setStartTime(Date.now());
+
+    setTimeout(() => {
+      const target = generateTarget();
+      setTargets([target]);
+    }, 100);
+  };
 
   const getButtonClass = (current: string) => {
     return mode === current
@@ -110,13 +94,7 @@ export default function AimTrainerApp() {
           <div className="flex items-center justify-center h-full">
             <button
               className="bg-blue-500 px-4 py-2 rounded"
-              onClick={() => {
-                console.log("Game started");
-                setStarted(true);
-                setScore(0);
-                setShots(0);
-                setStartTime(Date.now());
-              }}
+              onClick={startTraining}
             >
               Start Training
             </button>
@@ -128,14 +106,9 @@ export default function AimTrainerApp() {
           >
             <canvas
               ref={canvasRef}
-              width={containerSize.width}
-              height={containerSize.height}
+              width={containerRef.current?.clientWidth || 800}
+              height={containerRef.current?.clientHeight || 600}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
-            />
-            {/* Test target always visible */}
-            <div
-              className="absolute bg-green-500 rounded-full z-20"
-              style={{ width: '50px', height: '50px', left: '100px', top: '100px' }}
             />
             {targets.map((t) => (
               <div
