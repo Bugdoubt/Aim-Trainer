@@ -74,7 +74,7 @@ export default function AimTrainerApp() {
       <main className="flex-grow flex flex-row relative overflow-hidden min-h-0">
         {!started ? (
           <button
-            className="bg-blue-500 px-4 py-2 rounded"
+            className="bg-blue-500 px-4 py-2 rounded w-[200px] mt-4"
             onClick={() => {
               setStarted(true);
               setScore(0);
@@ -88,7 +88,7 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         ) : (
-          <div className="relative flex-grow h-[250px] max-w-[350px] bg-black overflow-hidden">
+          <div className="relative flex-grow h-[125px] max-w-[175px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
               width={800}
