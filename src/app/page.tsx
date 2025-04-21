@@ -50,7 +50,9 @@ export default function AimTrainerApp() {
       setScore(0);
       setShots(0);
       setStartTime(Date.now());
-      setTargets([generateTarget()]);
+      setTimeout(() => {
+        setTargets([generateTarget()]);
+      }, 100);
     }
   }, [started, mode]);
 
@@ -114,7 +116,7 @@ export default function AimTrainerApp() {
             {targets.map((t) => (
               <div
                 key={t.id}
-                className="absolute bg-red-500 rounded-full"
+                className="absolute bg-red-500 rounded-full z-10"
                 style={{ width: t.size, height: t.size, left: t.x, top: t.y }}
               />
             ))}
