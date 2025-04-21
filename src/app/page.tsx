@@ -101,7 +101,11 @@ export default function AimTrainerApp() {
                 setScore(0);
                 setShots(0);
                 setStartTime(Date.now());
-                setTargets([generateTarget()]);
+
+                // Wait until layout is stable before generating target
+                setTimeout(() => {
+                  setTargets([generateTarget()]);
+                }, 100);
               }}
             >
               Start Training
