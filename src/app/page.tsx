@@ -51,6 +51,9 @@ export default function AimTrainerApp() {
       ? "px-4 py-2 rounded border bg-white text-black"
       : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
   };
+      ? "px-4 py-2 rounded border bg-white text-black"
+      : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
+  };
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-col overflow-hidden">
