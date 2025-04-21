@@ -41,8 +41,7 @@ export default function AimTrainerApp() {
       hits: score,
       attempts: totalAttempts
     };
-    const updatedHistory = [gameEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
-    const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
+        const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
     if (isHighScore) {
       setPendingHighScore(newEntry);
     } else {
@@ -57,9 +56,9 @@ const gameEntry = {
   duration,
   timestamp: new Date().toISOString(),
 };
-const updatedHistory = [gameEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
-setHistory(updatedHistory);
-localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
+const updated = [gameEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
+setHistory(updated);
+localStorage.setItem("aimTrainerHistory", JSON.stringify(updated));
 
 setStarted(false);
     setTargets([]);
