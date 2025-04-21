@@ -48,6 +48,8 @@ export default function AimTrainerApp() {
     }
     const duration = (Date.now() - startTime) / 1000;
 const total = score + misses;
+const duration = (Date.now() - startTime) / 1000;
+const total = score + misses;
 const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
 const gameEntry = {
   score: score,
