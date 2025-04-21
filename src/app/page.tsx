@@ -42,17 +42,6 @@ export default function AimTrainerApp() {
     setStarted(false);
     setTargets([]);
   };
-    const duration = (Date.now() - startTime) / 1000;
-    const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) : 0;
-    const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString() };
-    const updatedHistory = [newEntry, ...history].slice(0, 10);
-    setHistory(updatedHistory);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
-    }
-    setStarted(false);
-    setTargets([]);
-  };
 
   useEffect(() => {
     let timer;
@@ -87,7 +76,7 @@ export default function AimTrainerApp() {
           ))}
         </nav>
 
-        {!started && (
+        {!started && !pendingHighScore && (
           <button
             className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
             onClick={() => {
@@ -103,6 +92,31 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         )}
+
+        {pendingHighScore && (
+          <form
+            className="mt-4 flex flex-col items-center gap-2 w-full"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const namedScore = { ...pendingHighScore, username };
+              const newHistory = [namedScore, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
+              setHistory(newHistory);
+              localStorage.setItem("aimTrainerHistory", JSON.stringify(newHistory));
+              setPendingHighScore(null);
+              setUsername("");
+            }}
+          >
+            <p className="text-green-400 text-center">New High Score! Enter your name:</p>
+            <input
+              className="text-black px-2 py-1 rounded w-full"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Your name"
+            />
+            <button type="submit" className="bg-blue-500 px-3 py-1 rounded">Submit</button>
+          </form>
+        )}
       </div>
 
       {/* Main Play Area */}
@@ -111,8 +125,8 @@ export default function AimTrainerApp() {
           <div className="relative w-full max-w-[560px] h-[400px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
-              width={700}
-              height={500}
+              width={560}
+              height={400}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
@@ -134,76 +148,25 @@ export default function AimTrainerApp() {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400 mt-8">Click "Start Training" to begin</p>
-        )}
+          <>
+            <div className="text-center mb-4">
+              <p>Last Score: {score}</p>
+              <p>Last Shots: {shots}</p>
+              <p>Last Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%"}</p>
+            </div>
 
-        {/* Stats */}
-        <section className="p-4 text-center bg-black w-full max-w-full max-w-[560px] mt-4">
-          <h2 className="text-xl font-semibold">Stats</h2>
-          <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
-          <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
-          
-        {!started && !pendingHighScore && (
-          <div className="mt-2">
-            <p>Last Score: {score}</p>
-            <p>Last Shots: {shots}</p>
-            <p>Last Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%"}</p>
-          </div>
-        )}
-
-        {pendingHighScore && (
-          <form
-            className="mt-4 flex flex-col items-center gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const namedScore = { ...pendingHighScore, username };
-              const newHistory = [namedScore, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
-              setHistory(newHistory);
-              localStorage.setItem("aimTrainerHistory", JSON.stringify(newHistory));
-              setPendingHighScore(null);
-              setUsername("");
-            }}
-          >
-            <p className="text-green-400">New High Score! Enter your name:</p>
-            <input
-              className="text-black px-2 py-1 rounded"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="Your name"
-            />
-            <button type="submit" className="bg-blue-500 px-3 py-1 rounded">Submit</button>
-          </form>
-        )}
-
-        {!started && history.length > 0 && (
-          <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
-            <h3 className="text-white font-semibold mb-1">High Scores</h3>
-            {history.map((entry, idx) => (
-              <div key={idx} className="mb-1">
-                {entry.username ? `[${entry.username}] ` : ''}Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
+            {history.length > 0 && (
+              <div className="mt-4 max-h-40 overflow-y-auto text-sm text-gray-300 w-full max-w-[560px]">
+                <h3 className="text-white font-semibold mb-1">High Scores</h3>
+                {history.map((entry, idx) => (
+                  <div key={idx} className="mb-1">
+                    {entry.username ? `[${entry.username}] ` : ''}Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
-
-{started && (
-            <div className="mt-2">
-              <p>Score: {score}</p>
-              <p>Shots: {shots}</p>
-              <p>Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%"}</p>
-            </div>
-          )}
-          {!started && history.length > 0 && (
-            <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
-              {history.map((entry, idx) => (
-                <div key={idx} className="mb-1">
-                  [{new Date(entry.timestamp).toLocaleTimeString()}] {entry.mode.toUpperCase()} - Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
       </div>
     </div>
   );
