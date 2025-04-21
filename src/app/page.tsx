@@ -50,7 +50,21 @@ export default function AimTrainerApp() {
       setHistory(updatedHistory);
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
-    setStarted(false);
+    const duration = (Date.now() - startTime) / 1000;
+const total = score + misses;
+const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
+const newEntry = {
+  score,
+  misses,
+  accuracy,
+  duration,
+  timestamp: new Date().toISOString(),
+};
+const updated = [newEntry, ...history].slice(0, 10);
+setHistory(updated);
+localStorage.setItem("aimTrainerHistory", JSON.stringify(updated));
+
+setStarted(false);
     setTargets([]);
   };
 
@@ -75,10 +89,24 @@ export default function AimTrainerApp() {
           {['click', 'tracking', 'flick', 'precision'].map((m) => (
             <button
               key={m}
-              
+              className={getButtonClass(m) + ' w-full'}
+              onClick={() => setMode(m)}
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
+        {history.length > 0 && (
+          <div className="mt-6 w-full text-sm text-gray-300">
+            <h3 className="text-white font-semibold mb-2 text-center">High Scores</h3>
+            <div className="max-h-40 overflow-y-auto text-xs">
+              {history.map((entry, idx) => (
+                <div key={idx} className="mb-1 text-center">
+                  Score: {entry.score}, Accuracy: {entry.accuracy}, Time: {entry.duration}s
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+    
           ))}
         </nav>
 
@@ -161,7 +189,7 @@ export default function AimTrainerApp() {
             <div className="text-center mb-4">
               <p>Last Score: {score}</p>
               <p>Misses: {misses}</p>
-              <p>Accuracy: {(score + misses) > 0 ? Math.round((score / (score + misses)) * 100) + "%" : "0%"}</p>
+              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
