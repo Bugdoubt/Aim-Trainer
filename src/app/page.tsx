@@ -30,7 +30,7 @@ export default function AimTrainerApp() {
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
     const totalAttempts = score + misses;
-    const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
+    const accuracy = totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) + "%" : "0%";
     const newEntry = {
       mode,
       score,
@@ -166,7 +166,7 @@ export default function AimTrainerApp() {
             <div className="text-center mb-4">
               <p>Last Score: {score}</p>
               <p>Misses: {misses}</p>
-              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
+              <p>Accuracy: {(score + misses) > 0 ? Math.round((score / (score + misses)) * 100) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
