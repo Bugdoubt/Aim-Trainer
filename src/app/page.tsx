@@ -7,7 +7,6 @@ export default function AimTrainerApp() {
   const [score, setScore] = useState(0);
   const [misses, setMisses] = useState(0);
   const [startTime, setStartTime] = useState<any>(null);
-  const [finalStats, setFinalStats] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const [username, setUsername] = useState("");
@@ -53,7 +52,6 @@ export default function AimTrainerApp() {
     }
     setStarted(false);
     setTargets([]);
-    setFinalStats(newEntry);
   };
 
   useEffect(() => {
@@ -94,7 +92,6 @@ export default function AimTrainerApp() {
             className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
             onClick={() => {
               setStarted(true);
-              setFinalStats(null);
               setScore(0);
               setMisses(0);
               setStartTime(Date.now());
@@ -112,7 +109,7 @@ export default function AimTrainerApp() {
             className="mt-4 flex flex-col items-center gap-2 w-full"
             onSubmit={(e) => {
               e.preventDefault();
-              const namedScore = finalStats ? { ...finalStats, username } : { ...pendingHighScore, username };
+              const namedScore = { ...pendingHighScore, username };
               const newHistory = [namedScore, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
               setHistory(newHistory);
               localStorage.setItem("aimTrainerHistory", JSON.stringify(newHistory));
@@ -167,8 +164,8 @@ export default function AimTrainerApp() {
         ) : (
           <>
             <div className="text-center mb-4">
-              <p>Last Score: {finalStats ? finalStats.score : score}</p>
-              <p>Misses: {finalStats ? finalStats.misses : misses}</p>
+              <p>Last Score: {score}</p>
+              <p>Misses: {misses}</p>
               <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
 
