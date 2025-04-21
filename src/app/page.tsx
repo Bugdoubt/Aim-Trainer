@@ -18,6 +18,7 @@ export default function AimTrainerApp() {
     const { width, height } = containerSize;
     const x = Math.random() * (width - size);
     const y = Math.random() * (height - size);
+    console.log("Generated target at", { x, y, size });
     return { x, y, size, id: Date.now() };
   };
 
@@ -34,6 +35,7 @@ export default function AimTrainerApp() {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (entry && entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+        console.log("Container resized:", entry.contentRect);
         setContainerSize({
           width: entry.contentRect.width,
           height: entry.contentRect.height,
@@ -45,7 +47,6 @@ export default function AimTrainerApp() {
     return () => observer.disconnect();
   }, []);
 
-  // 🔥 THE GUARANTEED FIX:
   useEffect(() => {
     if (
       started &&
@@ -53,6 +54,7 @@ export default function AimTrainerApp() {
       containerSize.height > 0 &&
       targets.length === 0
     ) {
+      console.log("Generating first target");
       setTargets([generateTarget()]);
     }
   }, [started, containerSize, targets]);
@@ -109,6 +111,7 @@ export default function AimTrainerApp() {
             <button
               className="bg-blue-500 px-4 py-2 rounded"
               onClick={() => {
+                console.log("Game started");
                 setStarted(true);
                 setScore(0);
                 setShots(0);
@@ -128,6 +131,11 @@ export default function AimTrainerApp() {
               width={containerSize.width}
               height={containerSize.height}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
+            />
+            {/* Test target always visible */}
+            <div
+              className="absolute bg-green-500 rounded-full z-20"
+              style={{ width: '50px', height: '50px', left: '100px', top: '100px' }}
             />
             {targets.map((t) => (
               <div
@@ -153,6 +161,7 @@ export default function AimTrainerApp() {
       <section className="p-4 text-center bg-black">
         <h2 className="text-xl font-semibold">Stats</h2>
         <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
+        <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
         {started && (
           <div className="mt-2">
             <p>Score: {score}</p>
