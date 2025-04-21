@@ -13,8 +13,8 @@ export default function AimTrainerApp() {
 
   const generateTarget = () => {
     const size = 50;
-    const x = Math.random() * (800 - size);
-    const y = Math.random() * (600 - size);
+    const x = Math.random() * (700 - size);
+    const y = Math.random() * (500 - size);
     return { x, y, size, id: Date.now() };
   };
 
@@ -46,35 +46,34 @@ export default function AimTrainerApp() {
     return () => clearTimeout(timer);
   }, [started]);
 
-    const getButtonClass = (current: string) => {
+  const getButtonClass = (current: string) => {
     return mode === current
       ? "px-4 py-2 rounded border bg-white text-black"
       : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
   };
 
   return (
-    <div className="bg-black text-white min-h-screen flex flex-col overflow-hidden">
-      <header className="w-[250px] flex flex-col items-center justify-center p-4 flex-shrink-0 text-center gap-4">
+    <div className="bg-black text-white min-h-screen flex flex-row overflow-hidden">
+      {/* Left Sidebar */}
+      <div className="w-[250px] flex flex-col items-center justify-center gap-4 p-4 bg-gray-900">
         <h1 className="text-3xl font-bold">Aim Trainer</h1>
-        <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
-      </header>
+        <p className="text-sm text-gray-400 text-center">Train your aim across multiple modes</p>
 
-      <nav className="flex flex-col gap-2 items-center">
-        {['click', 'tracking', 'flick', 'precision'].map((m) => (
-          <button
-            key={m}
-            className={getButtonClass(m)}
-            onClick={() => setMode(m)}
-          >
-            {m.charAt(0).toUpperCase() + m.slice(1)}
-          </button>
-        ))}
-      </nav>
+        <nav className="flex flex-col gap-2 items-center w-full">
+          {['click', 'tracking', 'flick', 'precision'].map((m) => (
+            <button
+              key={m}
+              className={getButtonClass(m) + ' w-full'}
+              onClick={() => setMode(m)}
+            >
+              {m.charAt(0).toUpperCase() + m.slice(1)}
+            </button>
+          ))}
+        </nav>
 
-      <main className="flex-grow flex flex-row relative overflow-hidden min-h-0">
-        {!started ? (
+        {!started && (
           <button
-            className="bg-blue-500 px-4 py-2 rounded"
+            className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
             onClick={() => {
               setStarted(true);
               setScore(0);
@@ -87,12 +86,17 @@ export default function AimTrainerApp() {
           >
             Start Training
           </button>
-        ) : (
-          <div className="relative w-[800px] h-[600px] bg-black overflow-hidden">
+        )}
+      </div>
+
+      {/* Main Play Area */}
+      <div className="flex-grow flex flex-col items-center justify-center p-4">
+        {started ? (
+          <div className="relative w-[700px] h-[500px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
-              width={800}
-              height={600}
+              width={700}
+              height={500}
               className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
@@ -113,30 +117,33 @@ export default function AimTrainerApp() {
               />
             ))}
           </div>
+        ) : (
+          <p className="text-gray-400 mt-8">Click "Start Training" to begin</p>
         )}
-      </main>
 
-      <section className="p-4 text-center bg-black">
-        <h2 className="text-xl font-semibold">Stats</h2>
-        <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
-        <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
-        {started && (
-          <div className="mt-2">
-            <p>Score: {score}</p>
-            <p>Shots: {shots}</p>
-            <p>Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) : 0}%</p>
-          </div>
-        )}
-        {!started && history.length > 0 && (
-          <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
-            {history.map((entry, idx) => (
-              <div key={idx} className="mb-1">
-                [{new Date(entry.timestamp).toLocaleTimeString()}] {entry.mode.toUpperCase()} - Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+        {/* Stats */}
+        <section className="p-4 text-center bg-black w-full max-w-[700px] mt-4">
+          <h2 className="text-xl font-semibold">Stats</h2>
+          <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
+          <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
+          {started && (
+            <div className="mt-2">
+              <p>Score: {score}</p>
+              <p>Shots: {shots}</p>
+              <p>Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) : 0}%</p>
+            </div>
+          )}
+          {!started && history.length > 0 && (
+            <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
+              {history.map((entry, idx) => (
+                <div key={idx} className="mb-1">
+                  [{new Date(entry.timestamp).toLocaleTimeString()}] {entry.mode.toUpperCase()} - Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
