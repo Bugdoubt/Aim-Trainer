@@ -45,6 +45,18 @@ export default function AimTrainerApp() {
     return () => observer.disconnect();
   }, []);
 
+  // 🔥 THE GUARANTEED FIX:
+  useEffect(() => {
+    if (
+      started &&
+      containerSize.width > 0 &&
+      containerSize.height > 0 &&
+      targets.length === 0
+    ) {
+      setTargets([generateTarget()]);
+    }
+  }, [started, containerSize, targets]);
+
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
     const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) : 0;
@@ -101,11 +113,6 @@ export default function AimTrainerApp() {
                 setScore(0);
                 setShots(0);
                 setStartTime(Date.now());
-
-                // Wait until layout is stable before generating target
-                setTimeout(() => {
-                  setTargets([generateTarget()]);
-                }, 100);
               }}
             >
               Start Training
