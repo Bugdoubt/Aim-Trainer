@@ -48,10 +48,9 @@ export default function AimTrainerApp() {
       setHistory(updatedHistory);
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
-    const total = score + misses;
-const duration = (Date.now() - startTime) / 1000;
-const total = score + misses;
-const accuracy = total > 0 ? Math.round((score / total) * 100) + "%" : "0%";
+    const duration = (Date.now() - startTime) / 1000;
+const totalAttempts = score + misses;
+const accuracy = totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) + "%" : "0%";
 const gameEntry = {
   score: score,
   misses: misses,
