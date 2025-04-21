@@ -7,6 +7,7 @@ export default function AimTrainerApp() {
   const [score, setScore] = useState(0);
   const [misses, setMisses] = useState(0);
   const [startTime, setStartTime] = useState<any>(null);
+  const [finalStats, setFinalStats] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const [username, setUsername] = useState("");
@@ -28,11 +29,9 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
-    const finalScore = score;
-    const finalMisses = misses;
-        const duration = (Date.now() - startTime) / 1000;
-        const totalAttempts = finalScore + finalMisses;
-        const accuracy = totalAttempts > 0 ? Math.round((finalScore / totalAttempts) * 100) + "%" : "0%";
+    const duration = (Date.now() - startTime) / 1000;
+    const totalAttempts = score + misses;
+    const accuracy = totalAttempts > 0 ? ((score / totalAttempts) * 100).toFixed(1) + "%" : "0%";
     const newEntry = {
       mode,
       score,
@@ -54,6 +53,7 @@ export default function AimTrainerApp() {
     }
     setStarted(false);
     setTargets([]);
+    setFinalStats(newEntry);
   };
 
   useEffect(() => {
@@ -94,6 +94,7 @@ export default function AimTrainerApp() {
             className="bg-blue-500 px-4 py-2 rounded w-full mt-4"
             onClick={() => {
               setStarted(true);
+              setFinalStats(null);
               setScore(0);
               setMisses(0);
               setStartTime(Date.now());
@@ -166,9 +167,9 @@ export default function AimTrainerApp() {
         ) : (
           <>
             <div className="text-center mb-4">
-              <p>Last Score: {pendingHighScore ? pendingHighScore.score : score}</p>
-              <p>Misses: {pendingHighScore ? pendingHighScore.misses : misses}</p>
-              <p>Accuracy: {(score + misses) > 0 ? Math.round((score / (score + misses)) * 100) + "%" : "0%"}</p>
+              <p>Last Score: {finalStats ? finalStats.score : score}</p>
+              <p>Misses: {finalStats ? finalStats.misses : misses}</p>
+              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
