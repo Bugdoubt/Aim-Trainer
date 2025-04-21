@@ -62,11 +62,7 @@ export default function AimTrainerApp() {
     return () => clearTimeout(timer);
   }, [started]);
 
-  const getButtonClass = (current: string) => {
-    return mode === current
-      ? "px-4 py-2 rounded border bg-white text-black"
-      : "px-4 py-2 rounded border bg-gray-800 border-gray-700";
-  };
+  
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-row overflow-hidden">
@@ -80,7 +76,7 @@ export default function AimTrainerApp() {
             <button
               key={m}
               className={getButtonClass(m) + ' w-full'}
-              onClick={() => setMode(m)}
+              
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
             </button>
