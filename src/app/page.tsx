@@ -55,6 +55,7 @@ export default function AimTrainerApp() {
       localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
     }
     setStarted(false);
+    setTargets([]);
   };
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export default function AimTrainerApp() {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-4">
+    <div className="bg-black text-white min-h-screen p-4">
       <header className="text-center mb-6">
         <h1 className="text-3xl font-bold">Aim Trainer</h1>
         <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
@@ -105,19 +106,24 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         ) : (
-          <div className="w-full max-w-4xl h-[600px] bg-black relative">
+          <div className="relative bg-black w-[800px] h-[600px] border border-gray-700 overflow-hidden">
             <canvas
               ref={canvasRef}
               width={800}
               height={600}
               onClick={handleCanvasClick}
-              className="cursor-crosshair absolute top-0 left-0"
+              className="absolute top-0 left-0 w-full h-full z-0 cursor-crosshair"
             />
             {targets.map((t) => (
               <div
                 key={t.id}
                 className="absolute bg-red-500 rounded-full z-10"
-                style={{ width: t.size, height: t.size, left: t.x, top: t.y }}
+                style={{
+                  width: `${t.size}px`,
+                  height: `${t.size}px`,
+                  left: `${t.x}px`,
+                  top: `${t.y}px`
+                }}
               />
             ))}
           </div>
