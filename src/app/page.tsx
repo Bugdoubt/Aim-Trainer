@@ -166,7 +166,7 @@ export default function AimTrainerApp() {
             <div className="text-center mb-4">
               <p>Last Score: {score}</p>
               <p>Misses: {misses}</p>
-              <p>Accuracy: {(score + misses) > 0 ? ((score / (score + misses)) * 100).toFixed(1) + "%" : "0%"}</p>
+              <p>Accuracy: {(score + misses) > 0 ? Math.round((score / (score + misses)) * 100) + "%" : "0%"}</p>
             </div>
 
             {history.length > 0 && (
