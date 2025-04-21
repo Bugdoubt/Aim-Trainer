@@ -13,8 +13,8 @@ export default function AimTrainerApp() {
 
   const generateTarget = () => {
     const size = 50;
-    const x = Math.random() * (window.innerWidth - size);
-    const y = Math.random() * (window.innerHeight - size);
+    const x = Math.random() * (window.innerWidth - size - 40);
+    const y = Math.random() * (window.innerHeight - size - 200);
     return { x, y, size, id: Date.now() };
   };
 
@@ -53,13 +53,13 @@ export default function AimTrainerApp() {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-0 m-0 overflow-hidden">
-      <header className="text-center mb-6">
+    <div className="bg-black text-white min-h-screen flex flex-col overflow-hidden">
+      <header className="text-center p-4">
         <h1 className="text-3xl font-bold">Aim Trainer</h1>
         <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
       </header>
 
-      <nav className="flex gap-2 justify-center mb-4">
+      <nav className="flex gap-2 justify-center mb-2">
         {['click', 'tracking', 'flick', 'precision'].map((m) => (
           <button
             key={m}
@@ -71,22 +71,24 @@ export default function AimTrainerApp() {
         ))}
       </nav>
 
-      <main className="flex flex-col items-center">
+      <main className="flex-grow relative overflow-hidden min-h-0">
         {!started ? (
-          <button
-            className="mb-6 bg-blue-500 px-4 py-2 rounded"
-            onClick={() => {
-              setStarted(true);
-              setScore(0);
-              setShots(0);
-              setStartTime(Date.now());
-              setTargets([generateTarget()]);
-            }}
-          >
-            Start Training
-          </button>
+          <div className="flex items-center justify-center h-full">
+            <button
+              className="bg-blue-500 px-4 py-2 rounded"
+              onClick={() => {
+                setStarted(true);
+                setScore(0);
+                setShots(0);
+                setStartTime(Date.now());
+                setTargets([generateTarget()]);
+              }}
+            >
+              Start Training
+            </button>
+          </div>
         ) : (
-          <div className="relative w-full h-screen bg-black overflow-hidden">
+          <div className="relative w-full h-full bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
               width={window.innerWidth}
@@ -114,7 +116,7 @@ export default function AimTrainerApp() {
         )}
       </main>
 
-      <section className="mt-8 text-center">
+      <section className="p-4 text-center bg-black">
         <h2 className="text-xl font-semibold">Stats</h2>
         <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
         {started && (
@@ -125,15 +127,12 @@ export default function AimTrainerApp() {
           </div>
         )}
         {!started && history.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-lg font-medium">History</h3>
-            <ul className="text-sm text-gray-300">
-              {history.map((entry, idx) => (
-                <li key={idx} className="mb-1">
-                  [{new Date(entry.timestamp).toLocaleTimeString()}] {entry.mode.toUpperCase()} - Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
-                </li>
-              ))}
-            </ul>
+          <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
+            {history.map((entry, idx) => (
+              <div key={idx} className="mb-1">
+                [{new Date(entry.timestamp).toLocaleTimeString()}] {entry.mode.toUpperCase()} - Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
+              </div>
+            ))}
           </div>
         )}
       </section>
