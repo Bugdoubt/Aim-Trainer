@@ -45,17 +45,6 @@ export default function AimTrainerApp() {
     }
   }, []);
 
-  useEffect(() => {
-    if (started && mode === "click") {
-      setScore(0);
-      setShots(0);
-      setStartTime(Date.now());
-      setTimeout(() => {
-        setTargets([generateTarget()]);
-      }, 100);
-    }
-  }, [started, mode]);
-
   const endGame = () => {
     const duration = (Date.now() - startTime) / 1000;
     const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) : 0;
@@ -103,7 +92,18 @@ export default function AimTrainerApp() {
 
       <main className="flex flex-col items-center">
         {!started ? (
-          <button className="mb-6 bg-blue-500 px-4 py-2 rounded" onClick={() => setStarted(true)}>Start Training</button>
+          <button
+            className="mb-6 bg-blue-500 px-4 py-2 rounded"
+            onClick={() => {
+              setStarted(true);
+              setScore(0);
+              setShots(0);
+              setStartTime(Date.now());
+              setTargets([generateTarget()]);
+            }}
+          >
+            Start Training
+          </button>
         ) : (
           <div className="w-full max-w-4xl h-[600px] bg-black relative">
             <canvas
