@@ -92,7 +92,7 @@ export default function AimTrainerApp() {
       {/* Main Play Area */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">
         {started ? (
-          <div className="relative w-[700px] h-[500px] bg-black overflow-hidden">
+          <div className="relative w-full max-w-[560px] h-[400px] bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
               width={700}
@@ -122,7 +122,7 @@ export default function AimTrainerApp() {
         )}
 
         {/* Stats */}
-        <section className="p-4 text-center bg-black w-full max-w-[700px] mt-4">
+        <section className="p-4 text-center bg-black w-full max-w-full max-w-[560px] mt-4">
           <h2 className="text-xl font-semibold">Stats</h2>
           <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
           <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
