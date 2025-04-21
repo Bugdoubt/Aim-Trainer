@@ -142,7 +142,7 @@ export default function AimTrainerApp() {
           <h2 className="text-xl font-semibold">Stats</h2>
           <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
           <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
-          {started && (
+          
         {!started && !pendingHighScore && (
           <div className="mt-2">
             <p>Last Score: {score}</p>
@@ -187,6 +187,7 @@ export default function AimTrainerApp() {
           </div>
         )}
 
+{started && (
             <div className="mt-2">
               <p>Score: {score}</p>
               <p>Shots: {shots}</p>
