@@ -13,29 +13,9 @@ export default function AimTrainerApp() {
 
   const generateTarget = () => {
     const size = 50;
-    const x = Math.random() * (800 - size);
-    const y = Math.random() * (600 - size);
+    const x = Math.random() * (window.innerWidth - size);
+    const y = Math.random() * (window.innerHeight - size);
     return { x, y, size, id: Date.now() };
-  };
-
-  const handleCanvasClick = (e: any) => {
-    if (targets.length === 0) return;
-
-    const rect = canvasRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-    setShots(prev => prev + 1);
-
-    const target = targets[0];
-    if (
-      clickX >= target.x &&
-      clickX <= target.x + target.size &&
-      clickY >= target.y &&
-      clickY <= target.y + target.size
-    ) {
-      setScore(prev => prev + 1);
-      setTargets([generateTarget()]);
-    }
   };
 
   useEffect(() => {
@@ -73,7 +53,7 @@ export default function AimTrainerApp() {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen p-4">
+    <div className="bg-black text-white min-h-screen p-0 m-0 overflow-hidden">
       <header className="text-center mb-6">
         <h1 className="text-3xl font-bold">Aim Trainer</h1>
         <p className="text-sm text-gray-400">Train your aim across multiple modes</p>
@@ -106,18 +86,22 @@ export default function AimTrainerApp() {
             Start Training
           </button>
         ) : (
-          <div className="relative bg-black w-[800px] h-[600px] border border-gray-700 overflow-hidden">
+          <div className="relative w-full h-screen bg-black overflow-hidden">
             <canvas
               ref={canvasRef}
-              width={800}
-              height={600}
-              onClick={handleCanvasClick}
-              className="absolute top-0 left-0 w-full h-full z-0 cursor-crosshair"
+              width={window.innerWidth}
+              height={window.innerHeight}
+              className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
             />
             {targets.map((t) => (
               <div
                 key={t.id}
-                className="absolute bg-red-500 rounded-full z-10"
+                onClick={() => {
+                  setScore(prev => prev + 1);
+                  setShots(prev => prev + 1);
+                  setTargets([generateTarget()]);
+                }}
+                className="absolute bg-red-500 rounded-full z-10 cursor-pointer"
                 style={{
                   width: `${t.size}px`,
                   height: `${t.size}px`,
