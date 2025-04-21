@@ -9,6 +9,8 @@ export default function AimTrainerApp() {
   const [startTime, setStartTime] = useState<any>(null);
   const [targets, setTargets] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
+  const [username, setUsername] = useState("");
+  const [pendingHighScore, setPendingHighScore] = useState<any>(null);
   const canvasRef = useRef<any>(null);
 
   const generateTarget = () => {
@@ -26,6 +28,20 @@ export default function AimTrainerApp() {
   }, []);
 
   const endGame = () => {
+    const duration = (Date.now() - startTime) / 1000;
+    const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) : "0";
+    const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString(), username: "" };
+    const updatedHistory = [newEntry, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
+    const isHighScore = updatedHistory.findIndex(h => h.timestamp === newEntry.timestamp) > -1;
+    if (isHighScore) {
+      setPendingHighScore(newEntry);
+    } else {
+      setHistory(updatedHistory);
+      localStorage.setItem("aimTrainerHistory", JSON.stringify(updatedHistory));
+    }
+    setStarted(false);
+    setTargets([]);
+  };
     const duration = (Date.now() - startTime) / 1000;
     const accuracy = shots > 0 ? ((score / shots) * 100).toFixed(1) : 0;
     const newEntry = { mode, score, shots, accuracy, duration, timestamp: new Date().toISOString() };
@@ -127,6 +143,50 @@ export default function AimTrainerApp() {
           <p className="text-gray-400 text-sm">Accuracy, Reaction Time, Score History</p>
           <p className="text-red-500 text-sm">Targets count: {targets.length}</p>
           {started && (
+        {!started && !pendingHighScore && (
+          <div className="mt-2">
+            <p>Last Score: {score}</p>
+            <p>Last Shots: {shots}</p>
+            <p>Last Accuracy: {shots > 0 ? ((score / shots) * 100).toFixed(1) + "%" : "0%"}</p>
+          </div>
+        )}
+
+        {pendingHighScore && (
+          <form
+            className="mt-4 flex flex-col items-center gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const namedScore = { ...pendingHighScore, username };
+              const newHistory = [namedScore, ...history].sort((a, b) => b.score - a.score).slice(0, 10);
+              setHistory(newHistory);
+              localStorage.setItem("aimTrainerHistory", JSON.stringify(newHistory));
+              setPendingHighScore(null);
+              setUsername("");
+            }}
+          >
+            <p className="text-green-400">New High Score! Enter your name:</p>
+            <input
+              className="text-black px-2 py-1 rounded"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Your name"
+            />
+            <button type="submit" className="bg-blue-500 px-3 py-1 rounded">Submit</button>
+          </form>
+        )}
+
+        {!started && history.length > 0 && (
+          <div className="mt-4 max-h-32 overflow-y-auto text-sm text-gray-300">
+            <h3 className="text-white font-semibold mb-1">High Scores</h3>
+            {history.map((entry, idx) => (
+              <div key={idx} className="mb-1">
+                {entry.username ? `[${entry.username}] ` : ''}Score: {entry.score}, Accuracy: {entry.accuracy}%, Time: {entry.duration}s
+              </div>
+            ))}
+          </div>
+        )}
+
             <div className="mt-2">
               <p>Score: {score}</p>
               <p>Shots: {shots}</p>
