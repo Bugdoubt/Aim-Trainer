@@ -75,7 +75,6 @@ export default function AimTrainerApp() {
           {['click', 'tracking', 'flick', 'precision'].map((m) => (
             <button
               key={m}
-              className={getButtonClass(m) + ' w-full'}
               
             >
               {m.charAt(0).toUpperCase() + m.slice(1)}
